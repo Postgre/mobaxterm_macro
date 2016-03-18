@@ -1,8 +1,11 @@
+# script which translates characters from file "input.txt" to file "output.txt"
+# "output.txt" content is cleared before each script run
+
 print "\n  Macro creator by Miron"
 print "  8===========D~ \n"
 
-#sourceFile = 'MobaXterm.bin'
-sourceFile = 'dupa.txt'
+srcFile = 'input.txt'
+dstFile = 'output.txt'
 
 # translation dictionary
 dict = {
@@ -44,16 +47,52 @@ dict = {
 	'0' : '258:48:720897:0|',
 	'-' : '258:45:786433:-|',
 	' ' : '258:32:3735553:SPACE|',
-	'\n': '258:13:1835009:RETURN|'
+	'\n': '258:13:1835009:RETURN|0:0:0:SLEEPEQUAL1200|\n'
 };
 
-# read source file
-f = open(sourceFile)
+# open source file for reading
+fileReadHandler = open(srcFile, "r")
 
-for line in iter(f):
-    print 'Translating line: ', line, len(line)
+# clear destination file
+open(dstFile, 'w').close()
+# open destination file for writing
+fileWriteHandler = open (dstFile, "w")
+
+# read line by line
+for line in iter(fileReadHandler):
+    print '\nTranslating line: ', line, 'line length: ', len(line)
+
+    # check if line is a comment
+    if '#' in line:
+        print '\n-=> [INFO]: line is a comment! It will not be translated \n'
+        continue
+
+    # check if line is a macro name - it must contains ::
+    if '::' in line:
+        print '\n-=> [INFO]: line is a macro name! It will not be translated \n'
+        # remove '::' & 'newline' and add "=" at the end
+        line = line.replace('::', '')
+        line = line.replace('\n', '')
+        line += '='
+        # write translation to output file
+        fileWriteHandler.write(line)
+        continue
+
+    # do the translation - char by char
     for index, char in enumerate(line):
-        print '[', index, ']:\t', char, ' => ', dict[char]
+        if char not in dict:
+            print '\n-=> [ERROR]: cannot translate:', char, '- could not find it in dictionary, please update dictionary!\n'
+            exit(1)
+        if (char == "\n"):
+	    print '[', index, ']:\t', '\\n => ', dict[char]
+        else:
+	    print '[', index, ']:\t', char, ' => ', dict[char]
 
-# close file handler
-f.close()
+        # write translation to output file
+        fileWriteHandler.write(dict[char])
+
+# close file handlers
+fileReadHandler.close()
+fileWriteHandler.close()
+
+#text_file.write("Purchase Amount: %s" % TotalAmount)

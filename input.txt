@@ -1,0 +1,8 @@
+# this is exapmle of input file, lines with "#" will be treated as comments,
+# lines with '::' will be treated as macro name
+# lines with plain text will be treated as text for translation
+# example:
+::macro1 name
+macro command for translation
+::macro2 name
+second macro command
