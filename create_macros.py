@@ -1,7 +1,8 @@
 print "\n  Macro creator by Miron"
 print "  8===========D~ \n"
 
-sourceFile = 'MobaXterm.bin'
+#sourceFile = 'MobaXterm.bin'
+sourceFile = 'dupa.txt'
 
 # translation dictionary
 dict = {
@@ -42,10 +43,17 @@ dict = {
 	'9' : '258:57:655361:9|',
 	'0' : '258:48:720897:0|',
 	'-' : '258:45:786433:-|',
-	'\n': '258:13:1835009:RETURN'
+	' ' : '258:32:3735553:SPACE|',
+	'\n': '258:13:1835009:RETURN|'
 };
 
+# read source file
 f = open(sourceFile)
+
 for line in iter(f):
-    print '::', line
+    print 'Translating line: ', line, len(line)
+    for index, char in enumerate(line):
+        print '[', index, ']:\t', char, ' => ', dict[char]
+
+# close file handler
 f.close()
